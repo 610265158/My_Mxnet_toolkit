@@ -3,7 +3,6 @@
 import os
 import random
 
-
 def main(ratio):
     workdir=os.getcwd()
     datadir=os.path.join(workdir,'data')
@@ -34,6 +33,11 @@ def main(ratio):
             val_list.write(tmp_string)
             count_val+=1
 
+    train_list.close()
+    val_list.close()
+
+    for i in range(len(name_list)):
+        print(name_list[i],'with label',i)
 
 if __name__=="__main__":
     import argparse

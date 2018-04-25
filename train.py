@@ -60,8 +60,11 @@ fh = logging.FileHandler(args.log_file)
 logger.addHandler(fh)
 
 def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
-
+    import  os
+    if not os.access('./trained_models',os.F_OK):
+        os.mkdir('./trained_models')
     lr_scheduler = mx.lr_scheduler.FactorScheduler(20, 0.8)
+
     epoch_end_callback = mx.callback.do_checkpoint("./trained_models/your_model", 1)
 
     devs = [mx.gpu(i) for i in range(num_gpus)]
@@ -94,6 +97,7 @@ train_iter, val_iter=Mydataiter.get_iterator(args.batch_size,args.data_shape)
 
 
 if args.finetune:
+    print('finetune from pretrained model ...with', args.network)
     sym, arg_params, aux_params = mx.model.load_checkpoint('./models/' + args.network, args.epoch)
     (new_sym, new_args) = get_fine_tune_model(sym, arg_params, args.num_classes)
 
